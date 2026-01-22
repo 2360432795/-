@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>不良生活习惯自检表（量化分析）</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "Microsoft YaHei", "Segoe UI", sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .title {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .health-motto {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #3498db;
+            font-style: italic;
+            color: #2c3e50;
+        }
+        
+        .personal-info {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .info-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .info-title i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .info-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .category-tag {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .habit-section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .habit-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+        
+        .habit-table th {
+            background-color: #f2f6fc;
+            text-align: left;
+            padding: 14px 12px;
+            font-weight: 600;
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e6ed;
+        }
+        
+        .habit-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        
+        .habit-table tr:hover {
+            background-color: #f9fbfe;
+        }
+        
+        .habit-table tr.disabled {
+            opacity: 0.5;
+            background-color: #f9f9f9;
+        }
+        
+        .habit-table tr.disabled:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .frequency {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .frequency-btn {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            background-color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+        
+        .frequency-btn:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .frequency-btn.selected {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .frequency-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .severity {
+            font-weight: 600;
+        }
+        
+        .severity.low {
+            color: #27ae60;
+        }
+        
+        .severity.medium {
+            color: #f39c12;
+        }
+        
+        .severity.high {
+            color: #e74c3c;
+        }
+        
+        .stats-panel {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+        }
+        
+        .stat-box {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .results-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e0e6ed;
+        }
+        
+        .results-title {
+            font-size: 22px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .results-title i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .risk-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .risk-category {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .risk-category h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .risk-items {
+            list-style-type: none;
+        }
+        
+        .risk-item {
+            padding: 8px 0;
+            border-bottom: 1px dashed #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .risk-item:last-child {
+            border-bottom: none;
+        }
+        
+        .risk-item-name {
+            flex: 1;
+        }
+        
+        .risk-item-score {
+            font-weight: 600;
+            color: #e74c3c;
+        }
+        
+        .high-risk-list {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fff5f5;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .high-risk-title {
+            color: #e74c3c;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .high-risk-title i {
+            margin-right: 10px;
+        }
+        
+        .high-risk-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #ffeaea;
+        }
+        
+        .high-risk-item:last-child {
+            border-bottom: none;
+        }
+        
+        .high-risk-category {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: #ffeaea;
+            color: #e74c3c;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        
+        .warning-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-primary:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .info-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .habit-table {
+                font-size: 14px;
+            }
+            
+            .habit-table th, 
+            .habit-table td {
+                padding: 8px 6px;
+            }
+            
+            .frequency {
+                flex-wrap: wrap;
+            }
+            
+            .stat-box {
+                min-width: 100%;
+            }
+            
+            .risk-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">不良生活习惯自检表（量化分析）</h1>
+            <p class="subtitle">请填写个人信息并评估您的习惯，系统将自动分析健康风险</p>
+            
+            <div class="health-motto">
+                <i class="fas fa-heartbeat"></i> 疾病 = 坏习惯 + 时间 &nbsp;&nbsp;|&nbsp;&nbsp; 健康 = 好习惯 + 时间 &nbsp;&nbsp;|&nbsp;&nbsp; 养成一个好习惯可以抵消一些坏习惯
+            </div>
+        </div>
+        
+        <div class="personal-info">
+            <div class="info-title">
+                <i class="fas fa-user-circle"></i> 个人信息
+            </div>
+            <div class="info-form">
+                <div class="form-group">
+                    <label for="name" class="required">姓名</label>
+                    <input type="text" id="name" placeholder="请输入您的姓名">
+                </div>
+                <div class="form-group">
+                    <label for="gender" class="required">性别</label>
+                    <select id="gender">
+                        <option value="">请选择性别</option>
+                        <option value="male">男</option>
+                        <option value="female">女</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age" class="required">年龄</label>
+                    <input type="number" id="age" min="1" max="120" placeholder="请输入年龄">
+                </div>
+                <div class="form-group">
+                    <label for="occupation" class="required">职业</label>
+                    <input type="text" id="occupation" placeholder="请输入您的职业">
+                </div>
+                <div class="form-group">
+                    <label for="education">学历</label>
+                    <select id="education">
+                        <option value="">请选择学历</option>
+                        <option value="primary">小学及以下</option>
+                        <option value="middle">初中</option>
+                        <option value="high">高中/中专</option>
+                        <option value="college">大专/本科</option>
+                        <option value="master">硕士及以上</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="phone">联系电话</label>
+                    <input type="tel" id="phone" placeholder="请输入联系电话">
+                </div>
+            </div>
+        </div>
+        
+        <div class="categories">
+            <span class="category-tag" style="background-color: #e8f4fc; color: #3498db;"><i class="fas fa-bed"></i> 睡眠习惯</span>
+            <span class="category-tag" style="background-color: #e8f6f3; color: #16a085;"><i class="fas fa-utensils"></i> 饮食习惯</span>
+            <span class="category-tag" style="background-color: #fef9e7; color: #f39c12;"><i class="fas fa-shower"></i> 洗浴习惯</span>
+            <span class="category-tag" style="background-color: #fdedec; color: #e74c3c;"><i class="fas fa-running"></i> 运动习惯</span>
+            <span class="category-tag" style="background-color: #f4ecf7; color: #8e44ad;"><i class="fas fa-laptop"></i> 工作习惯</span>
+            <span class="category-tag" style="background-color: #ebf5fb; color: #5dade2;"><i class="fas fa-smoking"></i> 环境暴露</span>
+        </div>
+        
+        <div class="habit-section">
+            <h2 class="section-title"><i class="fas fa-bed"></i> 睡眠与作息习惯</h2>
+            <table class="habit-table">
+                <thead>
+                    <tr>
+                        <th width="50%">不良习惯</th>
+                        <th width="20%">危害程度</th>
+                        <th width="30%">您的频率</th>
+                    </tr>
+                </thead>
+                <tbody id="sleep-habits">
+                    <!-- 睡眠习惯数据将通过JavaScript填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="habit-section">
+            <h2 class="section-title"><i class="fas fa-shower"></i> 洗浴与穿着习惯</h2>
+            <table class="habit-table">
+                <thead>
+                    <tr>
+                        <th width="50%">不良习惯</th>
+                        <th width="20%">危害程度</th>
+                        <th width="30%">您的频率</th>
+                    </tr>
+                </thead>
+                <tbody id="bathing-habits">
+                    <!-- 洗浴习惯数据将通过JavaScript填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="habit-section">
+            <h2 class="section-title"><i class="fas fa-running"></i> 运动与体力活动</h2>
+            <table class="habit-table">
+                <thead>
+                    <tr>
+                        <th width="50%">不良习惯</th>
+                        <th width="20%">危害程度</th>
+                        <th width="30%">您的频率</th>
+                    </tr>
+                </thead>
+                <tbody id="exercise-habits">
+                    <!-- 运动习惯数据将通过JavaScript填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="habit-section">
+            <h2 class="section-title"><i class="fas fa-utensils"></i> 饮食与生活习惯</h2>
+            <table class="habit-table">
+                <thead>
+                    <tr>
+                        <th width="50%">不良习惯</th>
+                        <th width="20%">危害程度</th>
+                        <th width="30%">您的频率</th>
+                    </tr>
+                </thead>
+                <tbody id="diet-habits">
+                    <!-- 饮食习惯数据将通过JavaScript填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="habit-section">
+            <h2 class="section-title"><i class="fas fa-laptop"></i> 工作与生活环境</h2>
+            <table class="habit-table">
+                <thead>
+                    <tr>
+                        <th width="50%">不良习惯</th>
+                        <th width="20%">危害程度</th>
+                        <th width="30%">您的频率</th>
+                    </tr>
+                </thead>
+                <tbody id="environment-habits">
+                    <!-- 环境习惯数据将通过JavaScript填充 -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="stats-panel">
+            <div class="stat-box">
+                <div class="stat-value" id="total-habits">0</div>
+                <div class="stat-label">检测项目总数</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="selected-habits">0</div>
+                <div class="stat-label">已选择项目</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="risk-score">0</div>
+                <div class="stat-label">风险评分</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="risk-level">低</div>
+                <div class="stat-label">风险等级</div>
+            </div>
+        </div>
+        
+        <div id="results-section" class="results-section" style="display: none;">
+            <h2 class="results-title"><i class="fas fa-chart-bar"></i> 风险评估结果</h2>
+            
+            <div id="personal-summary">
+                <!-- 个人信息摘要将通过JavaScript填充 -->
+            </div>
+            
+            <div class="risk-categories">
+                <div class="risk-category">
+                    <h4><i class="fas fa-exclamation-triangle" style="color: #e74c3c;"></i> 高风险项（得分≥4）</h4>
+                    <ul id="high-risk-items" class="risk-items">
+                        <!-- 高风险项将通过JavaScript填充 -->
+                    </ul>
+                </div>
+                <div class="risk-category">
+                    <h4><i class="fas fa-exclamation-circle" style="color: #f39c12;"></i> 中风险项（得分=2-3）</h4>
+                    <ul id="medium-risk-items" class="risk-items">
+                        <!-- 中风险项将通过JavaScript填充 -->
+                    </ul>
+                </div>
+                <div class="risk-category">
+                    <h4><i class="fas fa-check-circle" style="color: #27ae60;"></i> 低风险项（得分=1）</h4>
+                    <ul id="low-risk-items" class="risk-items">
+                        <!-- 低风险项将通过JavaScript填充 -->
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="high-risk-details" class="high-risk-list">
+                <!-- 高风险项详情将通过JavaScript填充 -->
+            </div>
+            
+            <div id="risk-category-breakdown">
+                <!-- 风险分类统计将通过JavaScript填充 -->
+            </div>
+        </div>
+        
+        <div class="warning-box">
+            <h3><i class="fas fa-exclamation-triangle"></i> 重要提示</h3>
+            <p>本表只作为健康生活习惯的参考工具，不构成医疗建议。如果您有任何身体不适，请尽快咨询专业医生。紧急情况，请立即就医。</p>
+            <p>风险评分说明：0-20分为低风险，21-40分为中风险，41-60分为中高风险，61分以上为高风险。单个项目得分 = 频率值 × 危害系数（低=1, 中=2, 高=3）。</p>
+        </div>
+        
+        <button class="btn-primary" id="calculate-btn" onclick="calculateResults()" disabled>
+            <i class="fas fa-calculator"></i> 计算我的风险评分
+        </button>
+        
+        <button class="btn-primary" onclick="resetAll()" style="background-color: #95a5a6; margin-left: 10px;">
+            <i class="fas fa-redo"></i> 重置所有选择
+        </button>
+        
+        <div class="footer">
+            <p>注：本表根据《不良生活习惯自检表》整理，进行了分类和量化处理</p>
+            <p>数据来源：用户提供的PDF文档 | 生成时间：<span id="current-date"></span></p>
+            <p>© 2023 健康生活习惯自检工具</p>
+        </div>
+    </div>
+
+    <script>
+        // 获取当前日期
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('zh-CN');
+        
+        // 个人信息
+        let personalInfo = {
+            name: '',
+            gender: '',
+            age: '',
+            occupation: '',
+            education: '',
+            phone: ''
+        };
+        
+        // 监听个人信息变化
+        document.getElementById('name').addEventListener('input', function() {
+            personalInfo.name = this.value;
+            validatePersonalInfo();
+        });
+        
+        document.getElementById('gender').addEventListener('change', function() {
+            personalInfo.gender = this.value;
+            validatePersonalInfo();
+            updateGenderSpecificHabits();
+        });
+        
+        document.getElementById('age').addEventListener('input', function() {
+            personalInfo.age = this.value;
+            validatePersonalInfo();
+        });
+        
+        document.getElementById('occupation').addEventListener('input', function() {
+            personalInfo.occupation = this.value;
+            validatePersonalInfo();
+        });
+        
+        document.getElementById('education').addEventListener('change', function() {
+            personalInfo.education = this.value;
+        });
+        
+        document.getElementById('phone').addEventListener('input', function() {
+            personalInfo.phone = this.value;
+        });
+        
+        // 验证个人信息是否完整
+        function validatePersonalInfo() {
+            const btn = document.getElementById('calculate-btn');
+            if (personalInfo.name && personalInfo.gender && personalInfo.age && personalInfo.occupation) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
+        }
+        
+        // 不良习惯数据（根据PDF内容整理和分类）
+        const habitsData = {
+            sleep: [
+                { id: 1, habit: "晚11点后睡, 早9点后起", severity: "medium", category: "睡眠作息" },
+                { id: 2, habit: "开窗户/开空调睡觉", severity: "low", category: "睡眠作息" },
+                { id: 3, habit: "经常上夜班(到天亮)", severity: "high", category: "睡眠作息" },
+                { id: 4, habit: "很少晒太阳", severity: "medium", category: "睡眠作息" },
+                { id: 5, habit: "睡眠不足7-8小时", severity: "high", category: "睡眠作息" },
+                { id: 6, habit: "长期在空调房工作", severity: "medium", category: "睡眠作息" },
+                { id: 7, habit: "使用高枕", severity: "low", category: "睡眠作息" },
+                { id: 8, habit: "饭后立刻睡觉", severity: "medium", category: "睡眠作息" },
+                { id: 9, habit: "睡觉把脚放被子外", severity: "low", category: "睡眠作息" },
+                { id: 10, habit: "经常过早(早5点前)起", severity: "medium", category: "睡眠作息" },
+                { id: 11, habit: "蒙头睡觉", severity: "low", category: "睡眠作息" }
+            ],
+            bathing: [
+                { id: 12, habit: "早上洗头洗澡", severity: "low", category: "洗浴穿着" },
+                { id: 13, habit: "晚上11点后洗头洗澡", severity: "medium", category: "洗浴穿着" },
+                { id: 14, habit: "冷水洗头洗澡/天天洗澡", severity: "medium", category: "洗浴穿着" },
+                { id: 15, habit: "洗头后不及时吹干", severity: "medium", category: "洗浴穿着" },
+                { id: 16, habit: "运动后立即洗澡", severity: "low", category: "洗浴穿着" },
+                { id: 17, habit: "冷水洗脚不擦干", severity: "low", category: "洗浴穿着" },
+                { id: 18, habit: "喜欢光脚在地上走", severity: "low", category: "洗浴穿着" },
+                { id: 19, habit: "冬天冷水洗菜/碗/衣物", severity: "medium", category: "洗浴穿着" },
+                { id: 20, habit: "喜欢露背/露腰/露脚踝", severity: "medium", category: "洗浴穿着" },
+                { id: 21, habit: "四季穿凉鞋/冬天穿少穿薄", severity: "medium", category: "洗浴穿着" },
+                { id: 22, habit: "女性经期受凉", severity: "high", category: "洗浴穿着", genderSpecific: "female" }
+            ],
+            exercise: [
+                { id: 23, habit: "早5点前, 晚7点后运动", severity: "medium", category: "运动活动" },
+                { id: 24, habit: "不运动/少运动/超运动", severity: "high", category: "运动活动" },
+                { id: 25, habit: "久站/久坐/久伏案工作", severity: "high", category: "运动活动" },
+                { id: 26, habit: "每天超过一万步", severity: "low", category: "运动活动" },
+                { id: 27, habit: "长时间游泳/冬泳", severity: "medium", category: "运动活动" },
+                { id: 28, habit: "体力劳动过多", severity: "medium", category: "运动活动" },
+                { id: 29, habit: "练瑜伽(姿势不当)", severity: "low", category: "运动活动" },
+                { id: 30, habit: "饭后立即剧烈运动", severity: "medium", category: "运动活动" }
+            ],
+            diet: [
+                { id: 31, habit: "出汗/生气时喝凉水", severity: "medium", category: "饮食习惯" },
+                { id: 32, habit: "经常喝冷水, 吃冰镇食物", severity: "high", category: "饮食习惯" },
+                { id: 33, habit: "爱咬手指/咬笔杆/咬筷子", severity: "low", category: "饮食习惯" },
+                { id: 34, habit: "抽烟每天超过10根/长期吸二手烟", severity: "high", category: "饮食习惯" },
+                { id: 35, habit: "长期暴饮暴食", severity: "high", category: "饮食习惯" },
+                { id: 36, habit: "常喝含包装袋的奶/饮料", severity: "medium", category: "饮食习惯" },
+                { id: 37, habit: "长期减肥(过度节食)", severity: "medium", category: "饮食习惯" }
+            ],
+            environment: [
+                { id: 38, habit: "低头玩手机/用电脑过多", severity: "high", category: "工作环境" },
+                { id: 39, habit: "经常过度疲劳", severity: "high", category: "工作环境" },
+                { id: 40, habit: "经常憋尿/不按时排便", severity: "medium", category: "工作环境" },
+                { id: 41, habit: "手淫/意淫/看色情视频或资料", severity: "medium", category: "工作环境" },
+                { id: 42, habit: "性生活频繁/性欲低", severity: "medium", category: "工作环境" },
+                { id: 43, habit: "常翘二郎腿", severity: "low", category: "工作环境" },
+                { id: 44, habit: "爱躺着看电视/玩手机", severity: "medium", category: "工作环境" },
+                { id: 45, habit: "手机在床边充电/放头附近睡觉", severity: "medium", category: "工作环境" },
+                { id: 46, habit: "长期吸入炒菜油烟", severity: "high", category: "工作环境" },
+                { id: 47, habit: "住近污染源(化工厂/药厂等)", severity: "high", category: "工作环境" },
+                { id: 48, habit: "房屋过度装修", severity: "high", category: "工作环境" }
+            ]
+        };
+        
+        // 频率选项
+        const frequencyOptions = [
+            { label: "从不", value: 0 },
+            { label: "偶尔", value: 1 },
+            { label: "经常", value: 2 },
+            { label: "总是", value: 3 }
+        ];
+        
+        // 存储用户选择
+        let userSelections = {};
+        
+        // 更新性别相关习惯
+        function updateGenderSpecificHabits() {
+            const gender = personalInfo.gender;
+            
+            // 重新渲染所有表格
+            initializeTables();
+            
+            // 更新统计
+            updateStats();
+        }
+        
+        // 渲染习惯表格
+        function renderHabitTable(containerId, habits) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const gender = personalInfo.gender;
+            
+            habits.forEach(habit => {
+                // 检查是否为女性特定项目且当前用户为男性
+                if (habit.genderSpecific === "female" && gender === "male") {
+                    return; // 跳过此项
+                }
+                
+                const row = document.createElement('tr');
+                
+                // 如果是女性特定项目且当前用户为女性，添加标记
+                if (habit.genderSpecific === "female" && gender === "female") {
+                    row.classList.add('female-specific');
+                }
+                
+                // 习惯名称
+                const habitCell = document.createElement('td');
+                habitCell.textContent = habit.habit;
+                
+                // 危害程度
+                const severityCell = document.createElement('td');
+                const severitySpan = document.createElement('span');
+                severitySpan.className = `severity ${habit.severity}`;
+                
+                let severityText = '';
+                switch(habit.severity) {
+                    case 'low': severityText = '低'; break;
+                    case 'medium': severityText = '中'; break;
+                    case 'high': severityText = '高'; break;
+                }
+                severitySpan.textContent = severityText;
+                severityCell.appendChild(severitySpan);
+                
+                // 频率选择
+                const frequencyCell = document.createElement('td');
+                const frequencyDiv = document.createElement('div');
+                frequencyDiv.className = 'frequency';
+                
+                frequencyOptions.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = 'frequency-btn';
+                    btn.textContent = option.label;
+                    btn.dataset.value = option.value;
+                    btn.dataset.habitId = habit.id;
+                    
+                    // 检查是否已选择
+                    if (userSelections[habit.id] === option.value) {
+                        btn.classList.add('selected');
+                    }
+                    
+                    btn.addEventListener('click', () => {
+                        // 移除同组其他按钮的选中状态
+                        const siblings = frequencyDiv.querySelectorAll('.frequency-btn');
+                        siblings.forEach(sibling => {
+                            sibling.classList.remove('selected');
+                        });
+                        
+                        // 选中当前按钮
+                        btn.classList.add('selected');
+                        
+                        // 保存选择
+                        userSelections[habit.id] = option.value;
+                        
+                        // 更新统计
+                        updateStats();
+                    });
+                    
+                    frequencyDiv.appendChild(btn);
+                });
+                
+                frequencyCell.appendChild(frequencyDiv);
+                
+                // 组装行
+                row.appendChild(habitCell);
+                row.appendChild(severityCell);
+                row.appendChild(frequencyCell);
+                
+                container.appendChild(row);
+            });
+        }
+        
+        // 初始化所有表格
+        function initializeTables() {
+            renderHabitTable('sleep-habits', habitsData.sleep);
+            renderHabitTable('bathing-habits', habitsData.bathing);
+            renderHabitTable('exercise-habits', habitsData.exercise);
+            renderHabitTable('diet-habits', habitsData.diet);
+            renderHabitTable('environment-habits', habitsData.environment);
+            
+            // 初始化统计
+            updateStats();
+        }
+        
+        // 更新统计数据
+        function updateStats() {
+            // 计算总项目数（考虑性别筛选）
+            let totalHabits = 0;
+            const gender = personalInfo.gender;
+            
+            for (const category in habitsData) {
+                totalHabits += habitsData[category].filter(habit => {
+                    // 如果是男性，跳过女性特定项目
+                    if (habit.genderSpecific === "female" && gender === "male") {
+                        return false;
+                    }
+                    return true;
+                }).length;
+            }
+            
+            // 计算已选择项目数
+            let selectedHabits = 0;
+            for (const habitId in userSelections) {
+                if (userSelections[habitId] > 0) {
+                    selectedHabits++;
+                }
+            }
+            
+            // 更新显示
+            document.getElementById('total-habits').textContent = totalHabits;
+            document.getElementById('selected-habits').textContent = selectedHabits;
+        }
+        
+        // 计算风险评分并显示结果
+        function calculateResults() {
+            // 验证个人信息是否完整
+            if (!personalInfo.name || !personalInfo.gender || !personalInfo.age || !personalInfo.occupation) {
+                alert("请先填写完整的个人信息！");
+                return;
+            }
+            
+            let riskScore = 0;
+            let selectedCount = 0;
+            let riskItems = [];
+            
+            // 遍历所有习惯
+            for (const category in habitsData) {
+                habitsData[category].forEach(habit => {
+                    const habitId = habit.id;
+                    const frequency = userSelections[habitId];
+                    
+                    // 检查是否为女性特定项目且当前用户为男性
+                    if (habit.genderSpecific === "female" && personalInfo.gender === "male") {
+                        return; // 跳过此项
+                    }
+                    
+                    if (frequency !== undefined && frequency > 0) {
+                        selectedCount++;
+                        
+                        // 根据危害程度和频率计算得分
+                        let severityMultiplier = 1;
+                        switch(habit.severity) {
+                            case 'low': severityMultiplier = 1; break;
+                            case 'medium': severityMultiplier = 2; break;
+                            case 'high': severityMultiplier = 3; break;
+                        }
+                        
+                        const itemScore = frequency * severityMultiplier;
+                        riskScore += itemScore;
+                        
+                        // 记录项目详情
+                        riskItems.push({
+                            id: habitId,
+                            habit: habit.habit,
+                            category: habit.category,
+                            severity: habit.severity,
+                            frequency: frequency,
+                            score: itemScore
+                        });
+                    }
+                });
+            }
+            
+            // 计算风险等级
+            let riskLevel = "低";
+            if (riskScore > 60) {
+                riskLevel = "高";
+            } else if (riskScore > 40) {
+                riskLevel = "中高";
+            } else if (riskScore > 20) {
+                riskLevel = "中";
+            }
+            
+            // 更新显示
+            document.getElementById('risk-score').textContent = riskScore;
+            document.getElementById('risk-level').textContent = riskLevel;
+            
+            // 根据风险等级改变颜色
+            const riskLevelElement = document.getElementById('risk-level');
+            riskLevelElement.className = 'stat-value';
+            
+            switch(riskLevel) {
+                case '低':
+                    riskLevelElement.style.color = '#27ae60';
+                    break;
+                case '中':
+                    riskLevelElement.style.color = '#f39c12';
+                    break;
+                case '中高':
+                    riskLevelElement.style.color = '#e67e22';
+                    break;
+                case '高':
+                    riskLevelElement.style.color = '#e74c3c';
+                    break;
+            }
+            
+            // 显示结果区域
+            document.getElementById('results-section').style.display = 'block';
+            
+            // 生成结果报告
+            generateResultsReport(riskScore, riskLevel, riskItems);
+            
+            // 滚动到结果区域
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // 生成结果报告
+        function generateResultsReport(totalScore, riskLevel, riskItems) {
+            // 个人信息摘要
+            const genderText = personalInfo.gender === 'male' ? '男' : '女';
+            const educationText = getEducationText(personalInfo.education);
+            
+            document.getElementById('personal-summary').innerHTML = `
+                <div style="background-color: #f0f7ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                    <h4 style="color: #2c3e50; margin-bottom: 10px;"><i class="fas fa-user"></i> 个人信息摘要</h4>
+                    <p><strong>姓名：</strong>${personalInfo.name} &nbsp;&nbsp; <strong>性别：</strong>${genderText} &nbsp;&nbsp; <strong>年龄：</strong>${personalInfo.age}岁</p>
+                    <p><strong>职业：</strong>${personalInfo.occupation} &nbsp;&nbsp; <strong>学历：</strong>${educationText}</p>
+                    <p><strong>检测时间：</strong>${new Date().toLocaleString('zh-CN')}</p>
+                </div>
+            `;
+            
+            // 分类风险项
+            const highRiskItems = riskItems.filter(item => item.score >= 4);
+            const mediumRiskItems = riskItems.filter(item => item.score >= 2 && item.score <= 3);
+            const lowRiskItems = riskItems.filter(item => item.score === 1);
+            
+            // 高风险项列表
+            const highRiskList = document.getElementById('high-risk-items');
+            highRiskList.innerHTML = '';
+            
+            if (highRiskItems.length === 0) {
+                highRiskList.innerHTML = '<li class="risk-item">无高风险项目</li>';
+            } else {
+                highRiskItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'risk-item';
+                    li.innerHTML = `
+                        <span class="risk-item-name">${item.habit}</span>
+                        <span class="risk-item-score">${item.score}分</span>
+                    `;
+                    highRiskList.appendChild(li);
+                });
+            }
+            
+            // 中风险项列表
+            const mediumRiskList = document.getElementById('medium-risk-items');
+            mediumRiskList.innerHTML = '';
+            
+            if (mediumRiskItems.length === 0) {
+                mediumRiskList.innerHTML = '<li class="risk-item">无中风险项目</li>';
+            } else {
+                mediumRiskItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'risk-item';
+                    li.innerHTML = `
+                        <span class="risk-item-name">${item.habit}</span>
+                        <span class="risk-item-score">${item.score}分</span>
+                    `;
+                    mediumRiskList.appendChild(li);
+                });
+            }
+            
+            // 低风险项列表
+            const lowRiskList = document.getElementById('low-risk-items');
+            lowRiskList.innerHTML = '';
+            
+            if (lowRiskItems.length === 0) {
+                lowRiskList.innerHTML = '<li class="risk-item">无低风险项目</li>';
+            } else {
+                lowRiskItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.className = 'risk-item';
+                    li.innerHTML = `
+                        <span class="risk-item-name">${item.habit}</span>
+                        <span class="risk-item-score">${item.score}分</span>
+                    `;
+                    lowRiskList.appendChild(li);
+                });
+            }
+            
+            // 高风险项详情
+            const highRiskDetails = document.getElementById('high-risk-details');
+            highRiskDetails.innerHTML = '';
+            
+            if (highRiskItems.length > 0) {
+                let detailsHTML = `
+                    <h3 class="high-risk-title"><i class="fas fa-exclamation-triangle"></i> 高风险项详细分析（按危害程度排序）</h3>
+                `;
+                
+                // 按分数降序排序
+                highRiskItems.sort((a, b) => b.score - a.score);
+                
+                highRiskItems.forEach((item, index) => {
+                    const frequencyText = getFrequencyText(item.frequency);
+                    detailsHTML += `
+                        <div class="high-risk-item">
+                            <span class="high-risk-category">${item.category}</span>
+                            <strong>${index + 1}. ${item.habit}</strong>
+                            <p style="margin: 5px 0 0 0; color: #666;">
+                                <strong>风险评分：</strong>${item.score}分（危害程度：${getSeverityText(item.severity)}，频率：${frequencyText}）
+                            </p>
+                        </div>
+                    `;
+                });
+                
+                highRiskDetails.innerHTML = detailsHTML;
+            } else {
+                highRiskDetails.innerHTML = `
+                    <h3 class="high-risk-title"><i class="fas fa-check-circle" style="color: #27ae60;"></i> 未发现高风险项目</h3>
+                    <p>您没有高风险的生活习惯，继续保持！</p>
+                `;
+            }
+            
+            // 风险分类统计
+            const categoryBreakdown = document.getElementById('risk-category-breakdown');
+            
+            // 按类别统计
+            const categoryStats = {};
+            riskItems.forEach(item => {
+                if (!categoryStats[item.category]) {
+                    categoryStats[item.category] = {
+                        count: 0,
+                        totalScore: 0,
+                        items: []
+                    };
+                }
+                categoryStats[item.category].count++;
+                categoryStats[item.category].totalScore += item.score;
+                categoryStats[item.category].items.push(item);
+            });
+            
+            let breakdownHTML = `
+                <div style="margin-top: 30px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.05);">
+                    <h4 style="color: #2c3e50; margin-bottom: 15px;"><i class="fas fa-chart-pie"></i> 风险分类统计</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px;">
+            `;
+            
+            for (const category in categoryStats) {
+                const avgScore = (categoryStats[category].totalScore / categoryStats[category].count).toFixed(1);
+                breakdownHTML += `
+                    <div style="padding: 15px; background-color: #f8f9fa; border-radius: 6px;">
+                        <h5 style="margin-bottom: 10px; color: #555;">${category}</h5>
+                        <p style="margin: 5px 0;"><strong>项目数：</strong>${categoryStats[category].count}</p>
+                        <p style="margin: 5px 0;"><strong>总评分：</strong>${categoryStats[category].totalScore}分</p>
+                        <p style="margin: 5px 0;"><strong>平均分：</strong>${avgScore}分</p>
+                    </div>
+                `;
+            }
+            
+            breakdownHTML += `
+                    </div>
+                </div>
+            `;
+            
+            categoryBreakdown.innerHTML = breakdownHTML;
+        }
+        
+        // 辅助函数：获取学历文本
+        function getEducationText(education) {
+            switch(education) {
+                case 'primary': return '小学及以下';
+                case 'middle': return '初中';
+                case 'high': return '高中/中专';
+                case 'college': return '大专/本科';
+                case 'master': return '硕士及以上';
+                default: return '未填写';
+            }
+        }
+        
+        // 辅助函数：获取频率文本
+        function getFrequencyText(frequency) {
+            switch(frequency) {
+                case 1: return '偶尔';
+                case 2: return '经常';
+                case 3: return '总是';
+                default: return '从不';
+            }
+        }
+        
+        // 辅助函数：获取危害程度文本
+        function getSeverityText(severity) {
+            switch(severity) {
+                case 'low': return '低';
+                case 'medium': return '中';
+                case 'high': return '高';
+                default: return '未知';
+            }
+        }
+        
+        // 重置所有选择
+        function resetAll() {
+            if (confirm("确定要重置所有选择吗？")) {
+                userSelections = {};
+                initializeTables();
+                
+                // 重置风险评分显示
+                document.getElementById('risk-score').textContent = '0';
+                document.getElementById('risk-level').textContent = '低';
+                document.getElementById('risk-level').style.color = '#2c3e50';
+                
+                // 隐藏结果区域
+                document.getElementById('results-section').style.display = 'none';
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', initializeTables);
+    </script>
+</body>
+</html>
